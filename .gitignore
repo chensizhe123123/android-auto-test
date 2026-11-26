@@ -224,3 +224,7 @@ __marimo__/
 
 # 测试证据日志需要入库
 !docs/evidence/*.log
+
+# 自动化调试产物
+ui_*.xml
+reports/failure_*.png
