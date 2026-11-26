@@ -7,7 +7,7 @@
 
 | 编号 | 模块 | 用例名 | 前置条件 | 步骤 | 预期结果 | 优先级 | 执行结果 |
 |---|---|---|---|---|---|---|---|
-| TC-01 | 启动 | 冷启动进入 Status 页 | App 已安装且未运行 | 1. 点击桌面 GPSTest 图标 | 进入 Status 页，标题显示 Status，可见 Lat / Long / Alt / # Sats 等标签 | P0 | 待执行 |
+| TC-01 | 启动 | 冷启动进入 Status 页 | App 已安装且未运行 | 1. 点击桌面 GPSTest 图标 | 首次安装或清除数据后冷启动进入 Status 页，标题显示 Status，可见 Lat / Long / Alt / # Sats 等标签 | P0 | 待执行 |
 | TC-02 | 启动 | 启动后 GPS 开关默认状态 | Auto-Start GNSS 为勾选状态 | 1. 冷启动 App | 工具栏右侧 GPS 开关处于开启状态 | P0 | 待执行 |
 | TC-03 | 开关 | 关闭 GPS 开关 | 已进入 Status 页且开关为开 | 1. 点击工具栏 GPS 开关 | 开关变为关闭状态，Status 页数值停止刷新 | P0 | 待执行 |
 | TC-04 | 开关 | 重新开启 GPS 开关 | 开关处于关闭状态 | 1. 再次点击 GPS 开关 | 开关恢复开启，数值恢复刷新 | P0 | 待执行 |
@@ -28,3 +28,4 @@
 | TC-19 | Accuracy-边界值 | 纬度越界 91 | 已进入 Accuracy 页 | 1. 纬度输入 91 2. 点击 SAVE | 提示纬度超出有效范围，不保存 | P1 | 待执行 |
 | TC-20 | 分享 | 点击分享按钮 | 已进入 Status 页 | 1. 点击工具栏分享图标 | 弹出系统分享面板，可选择应用 | P2 | 待执行 |
 | TC-21 | 设置-GNSS | 关闭自启动后重启 | Auto-Start GNSS 已勾选 | 1. 取消勾选 Auto-Start GNSS 2. 结束进程并重新启动 | 启动后 GPS 开关为关闭状态 | P2 | 待执行 |
+| TC-22 | 启动 | 冷启动恢复上次所在页面 | 曾使用过 App 且停留在非 Status 页面 | 1. 切到 Accuracy 页 2. 执行 am force-stop com.android.gpstest 3. 用 monkey 重新启动 | 回到上次停留的 Accuracy 页面（产品行为，非缺陷） | P2 | 待执行 |

@@ -221,3 +221,6 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# 测试证据日志需要入库
+!docs/evidence/*.log
