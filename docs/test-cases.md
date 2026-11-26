@@ -29,3 +29,52 @@
 | TC-20 | 分享 | 点击分享按钮 | 已进入 Status 页 | 1. 点击工具栏分享图标 | 弹出系统分享面板，可选择应用 | P2 | 待执行 |
 | TC-21 | 设置-GNSS | 关闭自启动后重启 | Auto-Start GNSS 已勾选 | 1. 取消勾选 Auto-Start GNSS 2. 结束进程并重新启动 | 启动后 GPS 开关为关闭状态 | P2 | 待执行 |
 | TC-22 | 启动 | 冷启动恢复上次所在页面 | 曾使用过 App 且停留在非 Status 页面 | 1. 切到 Accuracy 页 2. 执行 am force-stop com.android.gpstest 3. 用 monkey 重新启动 | 回到上次停留的 Accuracy 页面（产品行为，非缺陷） | P2 | 待执行 |
+
+---
+
+## 阶段 4 执行记录（手工执行）
+
+- 执行日期：2026-11-26
+- 执行环境：Android Emulator Pixel 6 / Android 14 (API 34) / Google APIs x86_64
+- 被测版本：GPSTest 3.10.6 (versionCode 24100)，google debug 包（源码构建）
+- 执行结果：22 条全部执行，21 通过、0 失败、1 通过但伴随缺陷
+
+### 逐条结果
+
+| 用例 | 优先级 | 结果 | 说明 |
+|---|---|---|---|
+| TC-01 | P0 | 通过 | 清除数据后冷启动进入 Status 页；未清数据时恢复上次页面，见 TC-22 |
+| TC-02 | P0 | 通过 | GPS 开关默认开启，数值正常刷新 |
+| TC-03 | P0 | 通过 | 关闭开关后各项数值冻结不再更新 |
+| TC-04 | P0 | 通过 | 重新开启后数值恢复，卫星数为 0/6/6 |
+| TC-05 | P0 | 通过 | Status  Sky 切换正常（卫星点缺失属范围外） |
+| TC-06 | P0 | 通过 | Sky  Map 切换正常（底图空白属范围外） |
+| TC-07 | P0 | 通过 | Map  Accuracy 切换正常 |
+| TC-08 | P0 | 通过 | Accuracy  Settings，Display/GNSS/Map 三组齐全；Settings 为独立 Activity，无顶部工具栏 |
+| TC-09 | P0 | 通过 | 抽屉中 Help 为二级子菜单（Help / What's New / About），进入内嵌帮助页，版本号 v3.10.6 (24100-google) 与构建一致 |
+| TC-10 | P1 | 通过 | 由 Help 返回 Status，各字段正常显示 |
+| TC-11 | P1 | 通过 | 勾选 Use Dark Theme 立即切换深色 |
+| TC-12 | P1 | 通过 | 取消勾选恢复浅色 |
+| TC-13 | P1 | 通过 | Keep Screen On 勾选状态可切换（真实常亮效果未验证） |
+| TC-14 | P1 | 通过 | 坐标格式改为 Degrees, Minutes, Decimal Seconds 后 Status 显示 N 37 25' 19.19"，换算正确 |
+| TC-15 | P1 | 通过 | 距离单位改为 Feet 后 Status 显示 16.4 ft，5.0 m  16.4 ft 换算正确 |
+| TC-16 | P1 | 通过 | Accuracy 空值提交被拦截，提示 Invalid location |
+| TC-17 | P1 | 通过 | 纬度输入字母被数字键盘阻止，无法输入非法字符 |
+| TC-18 | P0 | 通过 | 纬度 90 / 经度 116 保存成功，出现精度对比视图与 EDIT 按钮；误差巨大因真值与模拟器位置相距过远属预期 |
+| TC-19 | P0 | 通过 | 纬度 91 被拦截，停留编辑态且输入值保留 |
+| TC-20 | P0 | 通过（伴随缺陷） | 分享功能最终可用，但触发 ANR，见 Issue #1 |
+| TC-21 | P2 | 通过 | 取消 Auto-Start GNSS 后重启，GNSS 不自动开启；再次进入 Settings 该选项仍未勾选（设置持久化正常） |
+| TC-22 | P2 | 通过（观察项） | 冷启动恢复上次所在页面（Accuracy），属产品设计行为，非缺陷 |
+
+### 缺陷清单
+
+| 编号 | 用例 | 类型 | 严重程度 | 状态 |
+|---|---|---|---|---|
+| #1 | TC-20 | ANR / 主线程阻塞 | 中 | 已提交 Issue（https://github.com/chensizhe123123/android-auto-test/issues/1） |
+
+### 可用性观察项（不计入缺陷）
+
+1. Settings 页为独立 Activity，无顶部工具栏，无法在页内切换页面，只能按返回键退出（建议 P2 观察）
+2. Settings 中 Coordinate format 一行不显示当前选中值，需进弹窗查看 radio 才知当前格式
+3. 同类设置项不一致：Auto-Start GNSS、Coordinate format 均不显示当前值，而距离单位一行会显示当前值
+4. Accuracy 空值提交的提示文案为范围错误（between -90 and 90），未明确说明必填
